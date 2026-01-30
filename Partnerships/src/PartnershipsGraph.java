@@ -7,89 +7,208 @@ public class PartnershipsGraph {
 
 	public PartnershipsGraph() {
 		super();
-		all = new LinkedList<Company>();
+		all = new LinkedList<>();
 	}
 
-	public boolean addPartnership(Company c1, Company c2, int noOfJointProjects) {
-		if (c1.add(c2, noOfJointProjects)) {
-			c2.add(c1, noOfJointProjects);
+	public boolean addCompany(String name, String industry, int estYear) {
+		if (name == null || name.isBlank() || industry == null || industry.isBlank() || estYear < 1000 || estYear > 2026
+				|| find(name) != null) {
+			return false;
 		}
+		all.add(new Company(name, industry, estYear));
 		return true;
 	}
 
-	public boolean removePartnership(Company c1, Company c2) {
-		if (c1.remove(c2)) {
-			c2.remove(c1);
+	public Company find(String name) {
+		if (name == null) {
+			return null;
 		}
-		return true;
-	}
-
-	public boolean modifyRelationShip(Company c1, Company c2, int newNumOfJointProjects) {
-		if(c1.modify(c2, newNumOfJointProjects)) {
-			c2.modify(c1, newNumOfJointProjects);
-		}
-		return true;
-	}
-
-
-
-	public boolean find(Company c) {
-		for (Company company : all) {
-			if(company.equals(c)) {
-				return true;
+		for (Company c : all) {
+			if (c.getName().equalsIgnoreCase(name)) {
+				return c;
 			}
+		}
+		return null;
+	}
+
+	public boolean renameCompany(String oldName, String newName) {
+		if (oldName == null || oldName.isBlank() || newName == null || newName.isBlank()) {
+			return false;
+		}
+		if (oldName.equalsIgnoreCase(newName)) {
+			return false;
+		}
+		Company c = find(oldName);
+		if (c == null) {
+			return false;
+		}
+		if (find(newName) != null) {
+			return false;
+		}
+		c.setName(newName);
+		return true;
+	}
+
+	public boolean changeCompanyIndustry(String name, String newIndustry) {
+		if (name == null || name.isBlank() || newIndustry == null || newIndustry.isBlank()) {
+			return false;
+		}
+		Company c = find(name);
+		if (c == null) {
+			return false;
+		}
+		c.setIndustry(newIndustry);
+		return true;
+	}
+
+	public boolean changeCompanyEstYear(String name, int newEstYear) {
+		if (name == null || name.isBlank() || newEstYear < 1000 || newEstYear > 2026) {
+			return false;
+		}
+		Company c = find(name);
+		if (c == null) {
+			return false;
+		}
+		c.setEstYear(newEstYear);
+		return true;
+	}
+
+	public boolean removeCompany(String name) {
+		Company c = find(name);
+		if (c == null) {
+			return false;
+		}
+		for (Company p : all) {
+			if (p != c) {
+				p.removePartnership(c);
+			}
+		}
+		return all.remove(c);
+	}
+
+	public boolean addPartnership(String nameA, String nameB, int numOfJointProjects) {
+		Company c1 = find(nameA);
+		Company c2 = find(nameB);
+		if (c1 == null || c2 == null) {
+			return false;
+		}
+		if (c1 == c2) {
+			return false;
+		}
+		if (numOfJointProjects <= 0) {
+			return false;
+		}
+		if (c1.addPartnership(c2, numOfJointProjects)) {
+			c2.addPartnership(c1, numOfJointProjects);
+			return true;
 		}
 		return false;
 	}
-	
-	// Metoda koja kao ulazni argument prima godinu osnivanja, naziv firme i naziv
-	// oblasti i
-	// prikazuje brojfirmi iz te oblasti sa kojima je data firma partner, kao i
-	// ukupan broj zajedničkih projekata.
-	
-	public String showPartnershipStatsByIndustry(int estYear, String name, String industry) {
-		Company c = new Company(name, industry, estYear);
-		if(!find(c)) {
-			return "Ova kompanija ne postoji";
+
+	public boolean updatePartnership(String nameA, String nameB, int newNumOfJointProjects) {
+		Company c1 = find(nameA);
+		Company c2 = find(nameB);
+		if (c1 == null || c2 == null) {
+			return false;
 		}
-		int sum = 0;
+		if (c1 == c2) {
+			return false;
+		}
+		if (newNumOfJointProjects <= 0) {
+			return false;
+		}
+		if (c1.updatePartnership(c2, newNumOfJointProjects)) {
+			c2.updatePartnership(c1, newNumOfJointProjects);
+			return true;
+		}
+		return false;
+	}
+
+	public boolean removePartnership(String nameA, String nameB) {
+		Company c1 = find(nameA);
+		Company c2 = find(nameB);
+		if (c1 == null || c2 == null) {
+			return false;
+		}
+		if (c1 == c2) {
+			return false;
+		}
+		if (c1.removePartnership(c2)) {
+			c2.removePartnership(c1);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public String toString() {
+		if (all.isEmpty()) {
+			return "Nema firmi.";
+		}
+		StringBuffer sb = new StringBuffer();
+		for (Company c : all) {
+			sb.append(c).append("\n");
+		}
+		return sb.toString();
+	}
+
+	// b)
+
+	public void showPartnershipStatsByIndustry(String name, String industry) {
+		if (name == null || name.isBlank() || industry == null || industry.isBlank()) {
+			System.out.println("Pogrešan unos.");
+			return;
+		}
+		Company c = find(name);
+		if (c == null) {
+			System.out.println("Kompanija koju ste unijeli ne postoji.");
+			return;
+		}
 		int count = 0;
-		for (Company company : all) {
-			if(company.equals(c)) {
-				for (PartnershipEdge p : c.getPartnerships()) {
-					if(p.getPartner().getIndustry().equalsIgnoreCase(industry)) {
-						count++;
-						sum+=p.getNumOfJointProjects();
-					}
-				}
-			}
-		}
-		return "Broj firmi iz te oblasti sa kojima je data firma partner: " + count + "\nBroj zajednickih projekata: " + sum;
-	}
-	
-	//Metoda koja kao ulazni argument prima broj projekata i 
-	//prikazuje sve firme koje su sarađivale na više projekata od datog broja. 
-	//Za sve parove firmi prikazati i da li se bave istom oblasti.
-	
-	public String companiesWithMoreProjectsThanN(int noOfJointProjects) {
-		if(noOfJointProjects<=0) {
-			return "Broj projekata nije unijet pravilno";
-		}
 		int sum = 0;
-		String s = "";
-		for (Company company : all) {
-			for (PartnershipEdge p : company.getPartnerships()) {
-				sum+=p.getNumOfJointProjects();
-				if(company.getIndustry().equalsIgnoreCase(p.getPartner().getIndustry())) {
-					s+= "Kompanija " + company + " i kompanija " + p + " se bave istom oblascu";
-				}
-			}
-			if(sum>noOfJointProjects) {
-				s+=company.getName() + "\n";
+		for (PartnershipEdge e : c.getPartnerships()) {
+			if (e.getPartner().getIndustry().equalsIgnoreCase(industry)) {
+				count++;
+				sum += e.getNumOfJointProjects();
 			}
 		}
-		return s;
+		System.out.println("Kompanija: " + c.getName());
+		System.out.println("Broj partnerskih kompanija iz oblasti - " + industry + ": " + count);
+		System.out.println("Ukupan broj zajedničkih projekata: " + sum);
 	}
-	
+
+	// c)
+
+	public void showPartnersWithMoreProjectsThanN(int n) {
+	    if (n < 0) {
+	        System.out.println("Pogrešan unos. Broj ne može biti negativan.");
+	        return;
+	    }
+	    int counter = 0;
+	    for (int i = 0; i < all.size(); i++) {
+	        Company a = all.get(i);
+	        for (PartnershipEdge e : a.getPartnerships()) {
+	            Company b = e.getPartner();
+	            int j = all.indexOf(b);      
+	            if (j <= i) {                
+	                continue;
+	            }
+	            if (e.getNumOfJointProjects() > n) {
+	                counter++;
+	                System.out.print(a.getName() + " - " + b.getName()
+	                        + " [Broj projekata: " + e.getNumOfJointProjects() + "] ");
+
+	                if (a.getIndustry().equalsIgnoreCase(b.getIndustry())) {
+	                    System.out.println("Ista oblast");
+	                } else {
+	                    System.out.println("Različita oblast");
+	                }
+	            }
+	        }
+	    }
+	    if (counter == 0) {
+	        System.out.println("Nema parova firmi sa više od " + n + " zajedničkih projekata.");
+	    }
+	}
 
 }

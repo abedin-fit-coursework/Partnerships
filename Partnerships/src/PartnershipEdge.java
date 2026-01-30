@@ -3,7 +3,7 @@ public class PartnershipEdge {
 
 	private Company partner;
 	private int numOfJointProjects;
-	
+
 	public PartnershipEdge(Company partner, int numOfJointProjects) {
 		super();
 		this.partner = partner;
@@ -14,10 +14,6 @@ public class PartnershipEdge {
 		return partner;
 	}
 
-	public void setPartner(Company partner) {
-		this.partner = partner;
-	}
-
 	public int getNumOfJointProjects() {
 		return numOfJointProjects;
 	}
@@ -25,7 +21,10 @@ public class PartnershipEdge {
 	public void setNumOfJointProjects(int numOfJointProjects) {
 		this.numOfJointProjects = numOfJointProjects;
 	}
-	
-	
-	
+
+	@Override
+	public String toString() {
+		return partner.getName() + " - broj zajedničkih projekata: " + numOfJointProjects;
+	}
+
 }
