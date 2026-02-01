@@ -45,9 +45,6 @@ public class Company {
 	}
 
 	public PartnershipEdge findPartnership(Company partner) {
-		if (partner == null) {
-			return null;
-		}
 		for (PartnershipEdge e : partnerships) {
 			if (e.getPartner().equals(partner)) {
 				return e;

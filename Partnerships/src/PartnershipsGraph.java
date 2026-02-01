@@ -11,8 +11,7 @@ public class PartnershipsGraph {
 	}
 
 	public boolean addCompany(String name, String industry, int estYear) {
-		if (name == null || name.isBlank() || industry == null || industry.isBlank() || estYear < 1000 || estYear > 2026
-				|| find(name) != null) {
+		if (find(name) != null) {
 			return false;
 		}
 		all.add(new Company(name, industry, estYear));
@@ -20,9 +19,6 @@ public class PartnershipsGraph {
 	}
 
 	public Company find(String name) {
-		if (name == null) {
-			return null;
-		}
 		for (Company c : all) {
 			if (c.getName().equalsIgnoreCase(name)) {
 				return c;
@@ -32,12 +28,6 @@ public class PartnershipsGraph {
 	}
 
 	public boolean renameCompany(String oldName, String newName) {
-		if (oldName == null || oldName.isBlank() || newName == null || newName.isBlank()) {
-			return false;
-		}
-		if (oldName.equalsIgnoreCase(newName)) {
-			return false;
-		}
 		Company c = find(oldName);
 		if (c == null) {
 			return false;
@@ -50,9 +40,6 @@ public class PartnershipsGraph {
 	}
 
 	public boolean changeCompanyIndustry(String name, String newIndustry) {
-		if (name == null || name.isBlank() || newIndustry == null || newIndustry.isBlank()) {
-			return false;
-		}
 		Company c = find(name);
 		if (c == null) {
 			return false;
@@ -62,9 +49,6 @@ public class PartnershipsGraph {
 	}
 
 	public boolean changeCompanyEstYear(String name, int newEstYear) {
-		if (name == null || name.isBlank() || newEstYear < 1000 || newEstYear > 2026) {
-			return false;
-		}
 		Company c = find(name);
 		if (c == null) {
 			return false;
@@ -95,9 +79,6 @@ public class PartnershipsGraph {
 		if (c1 == c2) {
 			return false;
 		}
-		if (numOfJointProjects <= 0) {
-			return false;
-		}
 		if (c1.addPartnership(c2, numOfJointProjects)) {
 			c2.addPartnership(c1, numOfJointProjects);
 			return true;
@@ -112,9 +93,6 @@ public class PartnershipsGraph {
 			return false;
 		}
 		if (c1 == c2) {
-			return false;
-		}
-		if (newNumOfJointProjects <= 0) {
 			return false;
 		}
 		if (c1.updatePartnership(c2, newNumOfJointProjects)) {
@@ -155,10 +133,6 @@ public class PartnershipsGraph {
 	// b)
 
 	public void showPartnershipStatsByIndustry(String name, String industry) {
-		if (name == null || name.isBlank() || industry == null || industry.isBlank()) {
-			System.out.println("Pogrešan unos.");
-			return;
-		}
 		Company c = find(name);
 		if (c == null) {
 			System.out.println("Kompanija koju ste unijeli ne postoji.");
@@ -172,6 +146,10 @@ public class PartnershipsGraph {
 				sum += e.getNumOfJointProjects();
 			}
 		}
+		if (count == 0) {
+	        System.out.println("Kompanija nema partnera iz oblasti - " + industry);
+	        return;
+	    }
 		System.out.println("Kompanija: " + c.getName());
 		System.out.println("Broj partnerskih kompanija iz oblasti - " + industry + ": " + count);
 		System.out.println("Ukupan broj zajedničkih projekata: " + sum);
@@ -180,10 +158,6 @@ public class PartnershipsGraph {
 	// c)
 
 	public void showPartnersWithMoreProjectsThanN(int n) {
-	    if (n < 0) {
-	        System.out.println("Pogrešan unos. Broj ne može biti negativan.");
-	        return;
-	    }
 	    int counter = 0;
 	    for (int i = 0; i < all.size(); i++) {
 	        Company a = all.get(i);
@@ -199,9 +173,9 @@ public class PartnershipsGraph {
 	                        + " [Broj projekata: " + e.getNumOfJointProjects() + "] ");
 
 	                if (a.getIndustry().equalsIgnoreCase(b.getIndustry())) {
-	                    System.out.println("Ista oblast");
+	                    System.out.println("- Ista oblast");
 	                } else {
-	                    System.out.println("Različita oblast");
+	                    System.out.println("- Različita oblast");
 	                }
 	            }
 	        }
