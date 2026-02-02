@@ -135,7 +135,7 @@ public class PartnershipsGraph {
 	public void showPartnershipStatsByIndustry(String name, String industry) {
 		Company c = find(name);
 		if (c == null) {
-			System.out.println("Kompanija koju ste unijeli ne postoji.");
+			System.out.println("Firma koju ste unijeli ne postoji.");
 			return;
 		}
 		int count = 0;
@@ -147,11 +147,11 @@ public class PartnershipsGraph {
 			}
 		}
 		if (count == 0) {
-	        System.out.println("Kompanija nema partnera iz oblasti - " + industry);
+	        System.out.println("Firma nema partnera iz oblasti - " + industry);
 	        return;
 	    }
-		System.out.println("Kompanija: " + c.getName());
-		System.out.println("Broj partnerskih kompanija iz oblasti - " + industry + ": " + count);
+		System.out.println("Firma: " + c.getName());
+		System.out.println("Broj partnerskih firmi iz oblasti - " + industry + ": " + count);
 		System.out.println("Ukupan broj zajedničkih projekata: " + sum);
 	}
 
