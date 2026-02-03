@@ -25,12 +25,11 @@ public class Main {
 				}
 			}
 
-			if (choice == 0) { // Izlaz
-				System.out.println("Izlaz iz programa.");
-				break;
-			}
-
 			switch (choice) {
+			case 0: // Izlaz
+				System.out.println("Izlaz iz programa.");
+				sc.close();
+				return;
 			case 1: { // Dodaj firmu
 				String name;
 				while (true) {
@@ -87,50 +86,10 @@ public class Main {
 				break;
 			}
 
-			case 2: { // Izmijeni naziv firme
-				String oldName;
-				while (true) {
-					System.out.print("Unesite trenutni naziv firme: ");
-					oldName = sc.nextLine().trim();
-					if (oldName.isEmpty()) {
-						System.out.println("Unos ne može biti prazan.");
-						continue;
-					}
-					if (graph.find(oldName) == null) {
-						System.out.println("Firma sa tim nazivom ne postoji.");
-						continue;
-					}
-					break;
-				}
-
-				String newName;
-				while (true) {
-					System.out.print("Unesite novi naziv firme: ");
-					newName = sc.nextLine().trim();
-					if (newName.isEmpty()) {
-						System.out.println("Unos ne može biti prazan.");
-						continue;
-					}
-					if (oldName.equalsIgnoreCase(newName)) {
-						System.out.println("Novi naziv ne smije biti isti kao stari.");
-						continue;
-					}
-					if (graph.find(newName) != null) {
-						System.out.println("Firma sa tim nazivom već postoji.");
-						continue;
-					}
-					break;
-				}
-
-				if (graph.renameCompany(oldName, newName)) {
-					System.out.println("Naziv firme je uspješno izmijenjen.");
-				} else {
-					System.out.println("Izmjena nije uspjela.");
-				}
-				break;
-			}
-
-			case 3: { // Izmijeni oblast firme
+			case 2:
+			case 3:
+			case 4:
+			case 5: {
 				String name;
 				while (true) {
 					System.out.print("Unesite naziv firme: ");
@@ -146,87 +105,78 @@ public class Main {
 					break;
 				}
 
-				String newIndustry;
-				while (true) {
-					System.out.print("Unesite novu oblast: ");
-					newIndustry = sc.nextLine().trim();
-					if (newIndustry.isEmpty()) {
-						System.out.println("Unos ne može biti prazan.");
-						continue;
-					}
-					if (!industryExists(newIndustry)) {
-						System.out.println("Ta oblast ne postoji.");
-						System.out.println("Moguće oblasti su:");
-						printIndustries();
-						continue;
-					}
-					break;
-				}
-
-				if (graph.changeCompanyIndustry(name, newIndustry)) {
-					System.out.println("Oblast firme je uspješno izmijenjena.");
-				} else {
-					System.out.println("Izmjena nije uspjela.");
-				}
-				break;
-			}
-
-			case 4: { // Izmijeni godinu osnivanja firme
-				String name;
-				while (true) {
-					System.out.print("Unesite naziv firme: ");
-					name = sc.nextLine().trim();
-					if (name.isEmpty()) {
-						System.out.println("Unos ne može biti prazan.");
-						continue;
-					}
-					if (graph.find(name) == null) {
-						System.out.println("Firma sa tim nazivom ne postoji.");
-						continue;
-					}
-					break;
-				}
-
-				int year;
-				while (true) {
-					System.out.print("Unesite novu godinu osnivanja (1000-2026): ");
-					String line = sc.nextLine().trim();
-					try {
-						year = Integer.parseInt(line);
-						if (year >= 1000 && year <= 2026) {
-							break;
+				if (choice == 2) { // Izmijeni naziv firme
+					String newName;
+					while (true) {
+						System.out.print("Unesite novi naziv firme: ");
+						newName = sc.nextLine().trim();
+						if (newName.isEmpty()) {
+							System.out.println("Unos ne može biti prazan.");
+							continue;
 						}
-						System.out.println("Godina mora biti u opsegu 1000-2026.");
-					} catch (Exception e) {
-						System.out.println("Pogrešan unos. Morate unijeti cijeli broj.");
-					}
-				}
-
-				if (graph.changeCompanyEstYear(name, year)) {
-					System.out.println("Godina osnivanja je uspješno izmijenjena.");
-				} else {
-					System.out.println("Izmjena nije uspjela.");
-				}
-				break;
-			}
-
-			case 5: { // Obriši firmu
-				String name;
-				while (true) {
-					System.out.print("Unesite naziv firme: ");
-					name = sc.nextLine().trim();
-					if (name.isEmpty()) {
-						System.out.println("Unos ne može biti prazan.");
-						continue;
-					}
-					if (graph.find(name) == null) {
-						System.out.println("Firma sa tim nazivom ne postoji.");
-						continue;
+						if (name.equalsIgnoreCase(newName)) {
+							System.out.println("Novi naziv ne smije biti isti kao stari.");
+							continue;
+						}
+						if (graph.renameCompany(name, newName)) {
+							System.out.println("Naziv firme je uspješno izmijenjen.");
+							break;
+						} else {
+							System.out.println("Firma sa tim nazivom već postoji.");
+						}
 					}
 					break;
 				}
 
-				if (graph.removeCompany(name)) {
+				if (choice == 3) { // Izmijeni oblast firme
+					String newIndustry;
+					while (true) {
+						System.out.print("Unesite novu oblast: ");
+						newIndustry = sc.nextLine().trim();
+						if (newIndustry.isEmpty()) {
+							System.out.println("Unos ne može biti prazan.");
+							continue;
+						}
+						if (!industryExists(newIndustry)) {
+							System.out.println("Ta oblast ne postoji.");
+							System.out.println("Moguće oblasti su:");
+							printIndustries();
+							continue;
+						}
+						break;
+					}
+					if (graph.changeCompanyIndustry(name, newIndustry)) {
+						System.out.println("Oblast firme je uspješno izmijenjena.");
+					} else {
+						System.out.println("Izmjena nije uspjela.");
+					}
+					break;
+				}
+
+				if (choice == 4) { // Izmijeni godinu osnivanja firme
+					int year;
+					while (true) {
+						System.out.print("Unesite novu godinu osnivanja (1000-2026): ");
+						String line = sc.nextLine().trim();
+						try {
+							year = Integer.parseInt(line);
+							if (year >= 1000 && year <= 2026) {
+								break;
+							}
+							System.out.println("Godina mora biti u opsegu 1000-2026.");
+						} catch (Exception e) {
+							System.out.println("Pogrešan unos. Morate unijeti cijeli broj.");
+						}
+					}
+					if (graph.changeCompanyEstYear(name, year)) {
+						System.out.println("Godina osnivanja je uspješno izmijenjena.");
+					} else {
+						System.out.println("Izmjena nije uspjela.");
+					}
+					break;
+				}
+
+				if (graph.removeCompany(name)) { // choice == 5 Obriši firmu
 					System.out.println("Firma je obrisana.");
 				} else {
 					System.out.println("Brisanje nije uspjelo.");
@@ -234,49 +184,50 @@ public class Main {
 				break;
 			}
 
-			case 6: { // Dodaj partnerstvo
+			case 6:
+			case 7:
+			case 8: {
+				Company ca;
 				while (true) {
-					Company ca;
-					while (true) {
-						System.out.print("Unesite naziv PRVE firme: ");
-						String a = sc.nextLine().trim();
-						if (a.isEmpty()) {
-							System.out.println("Unos ne može biti prazan.");
-							continue;
-						}
-						ca = graph.find(a);
-						if (ca == null) {
-							System.out.println("Prva firma ne postoji.");
-							continue;
-						}
-						break;
+					System.out.print("Unesite naziv PRVE firme: ");
+					String a = sc.nextLine().trim();
+					if (a.isEmpty()) {
+						System.out.println("Unos ne može biti prazan.");
+						continue;
 					}
-
-					Company cb;
-					while (true) {
-						System.out.print("Unesite naziv DRUGE firme: ");
-						String b = sc.nextLine().trim();
-						if (b.isEmpty()) {
-							System.out.println("Unos ne može biti prazan.");
-							continue;
-						}
-						cb = graph.find(b);
-						if (cb == null) {
-							System.out.println("Druga firma ne postoji.");
-							continue;
-						}
-						if (ca.equals(cb)) {
-							System.out.println("Firma ne može biti partner sama sebi.");
-							continue;
-						}
-						break;
+					ca = graph.find(a);
+					if (ca == null) {
+						System.out.println("Prva firma ne postoji.");
+						continue;
 					}
+					break;
+				}
 
+				Company cb;
+				while (true) {
+					System.out.print("Unesite naziv DRUGE firme: ");
+					String b = sc.nextLine().trim();
+					if (b.isEmpty()) {
+						System.out.println("Unos ne može biti prazan.");
+						continue;
+					}
+					cb = graph.find(b);
+					if (cb == null) {
+						System.out.println("Druga firma ne postoji.");
+						continue;
+					}
+					if (ca.equals(cb)) {
+						System.out.println("Firma ne može biti partner sama sebi.");
+						continue;
+					}
+					break;
+				}
+
+				if (choice == 6) { // Dodaj partnerstvo
 					if (ca.hasPartner(cb)) {
 						System.out.println("Partnerstvo već postoji između ove dvije firme. Povratak na meni.");
 						break;
 					}
-
 					int projects;
 					while (true) {
 						System.out.print("Unesite broj zajedničkih projekata (> 0): ");
@@ -291,61 +242,20 @@ public class Main {
 							System.out.println("Pogrešan unos. Morate unijeti cijeli broj.");
 						}
 					}
-
 					if (graph.addPartnership(ca.getName(), cb.getName(), projects)) {
 						System.out.println("Partnerstvo je uspješno dodato.");
-						break;
 					} else {
 						System.out.println("Dodavanje partnerstva nije uspjelo.");
 					}
+					break;
 				}
-				break;
-			}
 
-			case 7: { // Izmijeni partnerstvo
-				while (true) {
-					Company ca;
-					while (true) {
-						System.out.print("Unesite naziv PRVE firme: ");
-						String a = sc.nextLine().trim();
-						if (a.isEmpty()) {
-							System.out.println("Unos ne može biti prazan.");
-							continue;
-						}
-						ca = graph.find(a);
-						if (ca == null) {
-							System.out.println("Prva firma ne postoji.");
-							continue;
-						}
-						break;
-					}
-
-					Company cb;
-					while (true) {
-						System.out.print("Unesite naziv DRUGE firme: ");
-						String b = sc.nextLine().trim();
-						if (b.isEmpty()) {
-							System.out.println("Unos ne može biti prazan.");
-							continue;
-						}
-						cb = graph.find(b);
-						if (cb == null) {
-							System.out.println("Druga firma ne postoji.");
-							continue;
-						}
-						if (ca.equals(cb)) {
-							System.out.println("Firma ne može biti partner sama sebi.");
-							continue;
-						}
-						break;
-					}
-
+				if (choice == 7) { // Izmijeni partnerstvo
 					PartnershipEdge edge = ca.findPartnership(cb);
 					if (edge == null) {
 						System.out.println("Partnerstvo između ove dvije firme ne postoji. Povratak na meni.");
 						break;
 					}
-
 					int projects;
 					while (true) {
 						System.out.print("Unesite NOVI broj zajedničkih projekata (> 0): ");
@@ -365,66 +275,19 @@ public class Main {
 							System.out.println("Pogrešan unos. Morate unijeti cijeli broj.");
 						}
 					}
-
 					if (graph.updatePartnership(ca.getName(), cb.getName(), projects)) {
 						System.out.println("Partnerstvo je uspješno izmijenjeno.");
-						break;
 					} else {
 						System.out.println("Izmjena partnerstva nije uspjela.");
 					}
+					break;
 				}
-				break;
-			}
 
-			case 8: { // Obriši partnerstvo
-				while (true) {
-					Company ca;
-					while (true) {
-						System.out.print("Unesite naziv PRVE firme: ");
-						String a = sc.nextLine().trim();
-						if (a.isEmpty()) {
-							System.out.println("Unos ne može biti prazan.");
-							continue;
-						}
-						ca = graph.find(a);
-						if (ca == null) {
-							System.out.println("Prva firma ne postoji.");
-							continue;
-						}
-						break;
-					}
-
-					Company cb;
-					while (true) {
-						System.out.print("Unesite naziv DRUGE firme: ");
-						String b = sc.nextLine().trim();
-						if (b.isEmpty()) {
-							System.out.println("Unos ne može biti prazan.");
-							continue;
-						}
-						cb = graph.find(b);
-						if (cb == null) {
-							System.out.println("Druga firma ne postoji.");
-							continue;
-						}
-						if (ca.equals(cb)) {
-							System.out.println("Firma ne može biti partner sama sebi.");
-							continue;
-						}
-						break;
-					}
-
-					if (!ca.hasPartner(cb)) {
-						System.out.println("Partnerstvo između ove dvije firme ne postoji. Povratak na meni.");
-						break;
-					}
-
-					if (graph.removePartnership(ca.getName(), cb.getName())) {
-						System.out.println("Partnerstvo je obrisano.");
-						break;
-					} else {
-						System.out.println("Brisanje nije uspjelo.");
-					}
+				// choice == 8 Obriši partnerstvo
+				if (graph.removePartnership(ca.getName(), cb.getName())) {
+					System.out.println("Partnerstvo je obrisano.");
+				} else {
+					System.out.println("Partnerstvo između ove dvije firme ne postoji. Povratak na meni.");
 				}
 				break;
 			}
@@ -493,8 +356,6 @@ public class Main {
 			}
 			}
 		}
-
-		sc.close();
 	}
 
 	// Pomoćne metode
@@ -539,5 +400,5 @@ public class Main {
 				"Građevinarstvo", "Energetika", "Transport", "Logistika", "Turizam", "Poljoprivreda", "Nekretnine",
 				"Konsalting", "Automobilska industrija", "Prehrambena industrija" };
 	}
-	
+
 }
