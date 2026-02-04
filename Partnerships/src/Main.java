@@ -6,7 +6,8 @@ public class Main {
 
 		PartnershipsGraph graph = new PartnershipsGraph();
 		Scanner sc = new Scanner(System.in);
-
+		System.out.println("Dobrodošli u aplikaciju za upravljanje partnerstvima među firmama!");
+		
 		while (true) {
 			printMenu();
 
@@ -27,7 +28,8 @@ public class Main {
 
 			switch (choice) {
 			case 0: // Izlaz
-				System.out.println("Izlaz iz programa.");
+				System.out.println("\nHvala što ste koristili naš program!");
+				System.out.println("----------IZLAZ----------");
 				sc.close();
 				return;
 			case 1: { // Dodaj firmu
